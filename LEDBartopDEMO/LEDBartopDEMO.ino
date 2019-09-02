@@ -1,12 +1,7 @@
-#include "FastLED.h"
+#include <FastLED.h>
 
 FASTLED_USING_NAMESPACE
-/*
- * CAMP LAMP LED Bartop CODE
- * 
- * Code for Camp Lamp's LED Bartop
- * this code is meant as a default code that can run on the bartop without more advanced features.
- */
+
 // FastLED "100-lines-of-code" demo reel, showing just a few 
 // of the kinds of animation patterns you can quickly and easily 
 // compose using FastLED.  
@@ -20,12 +15,11 @@ FASTLED_USING_NAMESPACE
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define DATA_PIN   17
+#define DATA_PIN    17
 //#define CLK_PIN   4
 #define LED_TYPE    WS2812
 #define COLOR_ORDER RGB
 #define NUM_LEDS    182
-
 CRGB leds[NUM_LEDS];
 
 #define BRIGHTNESS          96
@@ -61,7 +55,7 @@ void loop()
   FastLED.delay(1000/FRAMES_PER_SECOND); 
 
   // do some periodic updates
-  EVERY_N_MILLISECONDS( 20 ) { gHue++; gHue=map(gHue,0,255,0,50);} // slowly cycle the "base color" through the rainbow
+  EVERY_N_MILLISECONDS( 20 ) { gHue++; } // slowly cycle the "base color" through the rainbow
   EVERY_N_SECONDS( 10 ) { nextPattern(); } // change patterns periodically
 }
 
@@ -76,7 +70,7 @@ void nextPattern()
 void rainbow() 
 {
   // FastLED's built-in rainbow generator
-  fill_gradient( leds, NUM_LEDS, 0, gHue, 150, (50-gHue));
+  fill_rainbow( leds, NUM_LEDS, gHue, 7);
 }
 
 void rainbowWithGlitter() 
@@ -105,7 +99,7 @@ void sinelon()
 {
   // a colored dot sweeping back and forth, with fading trails
   fadeToBlackBy( leds, NUM_LEDS, 20);
-  int pos = beatsin16(13,0,NUM_LEDS);
+  int pos = beatsin16( 13, 0, NUM_LEDS-1 );
   leds[pos] += CHSV( gHue, 255, 192);
 }
 
@@ -125,7 +119,7 @@ void juggle() {
   fadeToBlackBy( leds, NUM_LEDS, 20);
   byte dothue = 0;
   for( int i = 0; i < 8; i++) {
-    leds[beatsin16(i+7,0,NUM_LEDS)] |= CHSV(dothue, 200, 255);
+    leds[beatsin16( i+7, 0, NUM_LEDS-1 )] |= CHSV(dothue, 200, 255);
     dothue += 32;
   }
 }
